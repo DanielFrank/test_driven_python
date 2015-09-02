@@ -45,18 +45,16 @@ class Stock:
         short_term_series = closing_price_list[-self.SHORT_TERM_TIMESPAN:]
         prev_short_term_series = closing_price_list[-self.SHORT_TERM_TIMESPAN-1:-1]
 
+        long_term_ma = sum([update.price for update in long_term_series])/self.LONG_TERM_TIMESPAN
+        prev_long_term_ma = sum([update.price for update in prev_long_term_series])/self.LONG_TERM_TIMESPAN
+        short_term_ma = sum([update.price for update in short_term_series])/self.SHORT_TERM_TIMESPAN
+        prev_short_term_ma = sum([update.price for update in prev_short_term_series])/self.SHORT_TERM_TIMESPAN
 
-        if sum([update.price for update in prev_long_term_series])/10 \
-                > sum([update.price for update in prev_short_term_series])/5 \
-            and sum([update.price for update in long_term_series])/10 \
-                < sum([update.price for update in short_term_series])/5:
-                    return StockSignal.buy
+        if self.is_short_term_crossover_below_to_above(prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+            return StockSignal.buy
 
-        if sum([update.price for update in prev_long_term_series])/10 \
-                < sum([update.price for update in prev_short_term_series])/5 \
-            and sum([update.price for update in long_term_series])/10 \
-                > sum([update.price for update in short_term_series])/5:
-                    return StockSignal.sell
+        if self.is_short_term_crossover_above_to_below(prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+            return StockSignal.sell
 
         return StockSignal.neutral
 
@@ -73,4 +71,12 @@ class Stock:
                 if price_event.timestamp.date() < chk:
                     closing_price_list.insert(0, price_event)
                     break
-        return closing_price_list        
+        return closing_price_list
+
+    def is_short_term_crossover_below_to_above(self, prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+        return prev_long_term_ma > prev_short_term_ma \
+               and long_term_ma < short_term_ma
+
+    def is_short_term_crossover_above_to_below(self, prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+       return prev_long_term_ma < prev_short_term_ma \
+              and long_term_ma > short_term_ma
