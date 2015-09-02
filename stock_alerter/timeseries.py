@@ -5,6 +5,8 @@ from enum import Enum
 
 Update = collections.namedtuple("Update", ["timestamp", "value"])
 
+class NotEnoughDataException(Exception):
+    pass
 
 class TimeSeries:
     def __init__(self):
