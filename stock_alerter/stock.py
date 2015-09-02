@@ -50,10 +50,10 @@ class Stock:
         short_term_ma = sum([update.price for update in short_term_series])/self.SHORT_TERM_TIMESPAN
         prev_short_term_ma = sum([update.price for update in prev_short_term_series])/self.SHORT_TERM_TIMESPAN
 
-        if self.is_short_term_crossover_below_to_above(prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+        if self.is_crossover_below_to_above(prev_short_term_ma, prev_long_term_ma, short_term_ma, long_term_ma):
             return StockSignal.buy
 
-        if self.is_short_term_crossover_above_to_below(prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
+        if self.is_crossover_below_to_above(prev_long_term_ma, prev_short_term_ma, long_term_ma,  short_term_ma):
             return StockSignal.sell
 
         return StockSignal.neutral
@@ -73,10 +73,7 @@ class Stock:
                     break
         return closing_price_list
 
-    def is_short_term_crossover_below_to_above(self, prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
-        return prev_long_term_ma > prev_short_term_ma \
-               and long_term_ma < short_term_ma
-
-    def is_short_term_crossover_above_to_below(self, prev_short_term_ma, prev_long_term_ma,  short_term_ma, long_term_ma):
-       return prev_long_term_ma < prev_short_term_ma \
-              and long_term_ma > short_term_ma
+    def is_crossover_below_to_above(self, prev_ma, prev_reference_ma,
+                                    current_ma, current_reference_ma):
+        return prev_ma < prev_reference_ma \
+               and current_ma > current_reference_ma
