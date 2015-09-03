@@ -9,7 +9,9 @@ from ..stock import Stock
 class AlertTest(unittest.TestCase):
     def test_action_is_executed_when_rule_matches(self):
         exchange = {"GOOG": Stock("GOOG")}
-        rule = PriceRule("GOOG",lambda stock: stock.price > 10)
+        rule = mock.MagicMock(spec=PriceRule)
+        rule.matches.return_value = True
+        rule.depends_on.return_value = {"GOOG"}
         action = mock.MagicMock()
         alert_text = "sample alert"
         alert = Alert(alert_text, rule, action)
