@@ -5,14 +5,10 @@ from ..action import PrintAction
 
 class PrintActionTest(unittest.TestCase):
     def test_executing_action_prints_message(self):
-        patcher = mock.patch('builtins.print')
-        mock_print = patcher.start()
-        try:
+        with mock.patch('builtins.print') as mock_print:
             action = PrintAction()
             text = "GOOG > $10"
             action.execute(text)
             mock_print.assert_called_with(text)
-        finally:
-            patcher.stop()
 
             
