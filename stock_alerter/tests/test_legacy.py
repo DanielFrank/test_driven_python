@@ -10,3 +10,8 @@ class AlertProcessorTest(unittest.TestCase):
         AlertProcessor()
         mock_print.assert_has_calls([mock.call("AAPL", 8), mock.call("GOOG", 15), mock.call("AAPL", 10), mock.call("GOOG", 21)])
 
+    def test_processor_characterization_2(self):
+        processor = AlertProcessor(False)
+        with mock.patch("builtins.print") as mock_print:
+            processor.run()
+        mock_print.assert_has_calls([mock.call("AAPL", 8), mock.call("GOOG", 15), mock.call("AAPL", 10), mock.call("GOOG", 21)])
