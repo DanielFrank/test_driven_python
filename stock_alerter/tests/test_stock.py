@@ -4,13 +4,23 @@ from datetime import datetime, timedelta
 
 from ..stock import Stock, StockSignal
 
+def setup_test():
+    global goog
+    goog = Stock("GOOG")
+
+def teardown_test():
+    global goog
+    goog = Stock("GOOG")
+
+def test_price_of_a_new_stock_class_should_be_None():
+    assert goog.price is None, "Price of a new stock should be none"
+
+test_price_of_a_new_stock_class_should_be_None.setup = setup_test
+test_price_of_a_new_stock_class_should_be_None.teardown = teardown_test
 
 class StockTest(unittest.TestCase):
     def setUp(self):
         self.goog = Stock("GOOG")
-
-    def test_price_of_a_new_stock_class_should_be_None(self):
-        self.assertIsNone(self.goog.price)
 
     def test_stock_update(self):
         """An update should set the price on the stock object
